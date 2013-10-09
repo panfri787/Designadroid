@@ -79,7 +79,8 @@
             android:layout_marginTop="60dp"
             android:layout_below="@+id/editTextDNI"
             android:layout_alignRight="@+id/editTextDNI"
-            android:layout_alignLeft="@+id/textViewDNI"/>
+            android:layout_alignLeft="@+id/textViewDNI"
+            android:onClick="buttonClick" />
 
     <TextView
             android:layout_width="wrap_content"
