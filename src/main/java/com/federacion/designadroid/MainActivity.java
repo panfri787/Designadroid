@@ -25,11 +25,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(android.os.Build.VERSION.SDK_INT > 9){
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
-
         textDni = (EditText) findViewById(R.id.editTextDNI);
         textLicencia = (EditText) findViewById(R.id.editTextLicencia);
     }
@@ -45,14 +40,12 @@ public class MainActivity extends Activity {
     public void buttonClick(View v){
         if (!textDni.getText().toString().isEmpty() && !textLicencia.getText().toString().isEmpty()){
             PeticionDesignacion peticion = new PeticionDesignacion(textDni.getText().toString(), textLicencia.getText().toString());
-            peticion.enviarPeticion();
-            Log.d("Debug botton:","Boton pulsado con cosas escritas.");
+            peticion.execute();
             //startActivity(peticion.enviarPeticion(this));
         }
         else {
             Toast toast = Toast.makeText(getApplicationContext(),"Rellena los campos", Toast.LENGTH_SHORT);
             toast.show();
-            Log.d("Debug boton:","Boton pulsado sin cosas escritas ¿Toast visible?");
         }
     }
     

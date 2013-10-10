@@ -69,7 +69,9 @@
             android:id="@+id/editTextDNI"
             android:layout_below="@+id/editTextLicencia"
             android:layout_alignLeft="@+id/editTextLicencia"
-            android:layout_alignRight="@+id/editTextLicencia"/>
+            android:layout_alignRight="@+id/editTextLicencia"
+        android:maxLines="1"
+        android:inputType="text" />
 
     <Button
             android:layout_width="match_parent"

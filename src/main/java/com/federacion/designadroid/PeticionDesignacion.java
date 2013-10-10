@@ -1,6 +1,7 @@
 package com.federacion.designadroid;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
@@ -21,11 +22,13 @@ import java.util.List;
 /**
  * Created by Pablo on 6/08/13.
  */
-public class PeticionDesignacion {
+public class PeticionDesignacion extends AsyncTask<Void, Void, Void>{
 
     private String dni;
 
     private String licencia;
+
+    private HttpResponse response;
 
     public PeticionDesignacion(String pdni, String plicencia){
         dni = pdni;
@@ -40,7 +43,17 @@ public class PeticionDesignacion {
         return licencia;
     }
 
-    public void enviarPeticion() {
+    public void doInBackground() {
+
+    }
+
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        Log.d("PeticionDesignacion:", response.getEntity().toString());
+    }
+
+    @Override
+    protected Void doInBackground(Void... voids) {
         try{
             HttpClient client = new DefaultHttpClient();
             HttpPost request = new HttpPost("https://intrafeb.feb.es/ConsultaDesignacion/Inicio.aspx");
@@ -53,9 +66,7 @@ public class PeticionDesignacion {
             parameters.add(new BasicNameValuePair("btnValidar", "Validar"));
             request.setEntity(new UrlEncodedFormEntity(parameters));
 
-            HttpResponse response = client.execute(request);
-
-            Log.d("Respuesta:", response.toString());
+            response = client.execute(request);
         }
         catch(UnsupportedEncodingException e){
             Log.d("Excepcion:",e.toString());
@@ -66,6 +77,8 @@ public class PeticionDesignacion {
         catch(IOException e){
             Log.d("Excepcion:",e.toString());
         }
+
+        return null;
     }
 
 
