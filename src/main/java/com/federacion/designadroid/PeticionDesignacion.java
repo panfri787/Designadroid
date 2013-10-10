@@ -41,7 +41,7 @@ public class PeticionDesignacion {
     }
 
     public void enviarPeticion() {
-        /*try{
+        try{
             HttpClient client = new DefaultHttpClient();
             HttpPost request = new HttpPost("https://intrafeb.feb.es/ConsultaDesignacion/Inicio.aspx");
 
@@ -65,7 +65,7 @@ public class PeticionDesignacion {
         }
         catch(IOException e){
             Log.d("Excepcion:",e.toString());
-        }*/
+        }
     }
 
 
