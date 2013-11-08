@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -67,6 +68,8 @@ public class PeticionDesignacion extends AsyncTask<Void, Void, Void>{
             request.setEntity(new UrlEncodedFormEntity(parameters));
 
             response = client.execute(request);
+            HttpEntity he = response.getEntity();
+            Log.d("PeticionDesignacion:", he.getContent().toString());
         }
         catch(UnsupportedEncodingException e){
             Log.d("Excepcion:",e.toString());
