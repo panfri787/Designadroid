@@ -1,6 +1,5 @@
 package com.federacion.designadroid;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -14,7 +13,12 @@ import org.apache.http.client.methods.HttpPost;
 import 	org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 import java.util.ArrayList;
@@ -44,10 +48,6 @@ public class PeticionDesignacion extends AsyncTask<Void, Void, Void>{
         return licencia;
     }
 
-    public void doInBackground() {
-
-    }
-
     @Override
     protected void onPostExecute(Void aVoid) {
         Log.d("PeticionDesignacion:", response.getEntity().toString());
@@ -68,8 +68,8 @@ public class PeticionDesignacion extends AsyncTask<Void, Void, Void>{
             request.setEntity(new UrlEncodedFormEntity(parameters));
 
             response = client.execute(request);
-            HttpEntity he = response.getEntity();
-            Log.d("PeticionDesignacion:", he.getContent().toString());
+            HttpEntity entity = response.getEntity();
+            generaHTML(entity.getContent(),(int)entity.getContentLength());
         }
         catch(UnsupportedEncodingException e){
             Log.d("Excepcion:",e.toString());
@@ -82,6 +82,25 @@ public class PeticionDesignacion extends AsyncTask<Void, Void, Void>{
         }
 
         return null;
+    }
+
+    public void generaHTML(InputStream input, int size){
+        BufferedReader reader =  new BufferedReader(new InputStreamReader(input), size);
+        try{
+            File fichero = new File("/data/data/com.federacion.designadroid/partidos");
+            fichero.createNewFile();
+            FileWriter fw = new FileWriter(fichero);
+
+            String line;
+
+            while ((line=reader.readLine()) != null) {
+                fw.append(line);
+            }
+            fw.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
