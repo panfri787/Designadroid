@@ -3,6 +3,9 @@ package com.federacion.designadroid;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.federacion.designadroid.modelo.Designacion;
+import com.federacion.designadroid.modelo.Miembro;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -12,6 +15,8 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import 	org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -22,7 +27,10 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Created by Pablo on 6/08/13.
@@ -69,7 +77,8 @@ public class PeticionDesignacion extends AsyncTask<Void, Void, Void>{
 
             response = client.execute(request);
             HttpEntity entity = response.getEntity();
-            generaHTML(entity.getContent(),(int)entity.getContentLength());
+            String html = generaHTML(entity.getContent(),(int)entity.getContentLength());
+            Designacion des = parseHtml(html);
         }
         catch(UnsupportedEncodingException e){
             Log.d("Excepcion:",e.toString());
@@ -84,31 +93,44 @@ public class PeticionDesignacion extends AsyncTask<Void, Void, Void>{
         return null;
     }
 
-    public void generaHTML(InputStream input, int size){
+    public String generaHTML(InputStream input, int size){
         BufferedReader reader =  new BufferedReader(new InputStreamReader(input), size);
+        StringBuilder sbHtml = new StringBuilder();
         try{
-            File fichero = new File("/data/data/com.federacion.designadroid/partidos");
-            fichero.createNewFile();
-            FileWriter fw = new FileWriter(fichero);
-
             String line;
 
             while ((line=reader.readLine()) != null) {
-                fw.append(line);
+                sbHtml.append(line);
             }
-            fw.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return sbHtml.toString();
     }
 
+    Designacion parseHtml(String s){
+        Designacion designacion = new Designacion();
+        Document doc = Jsoup.parse(s);
 
-    /*public Intent enviarPeticion(MainActivity activity){
-        Intent intent = new Intent(activity, MostrarDesignacion.class);
-        intent.putExtra(activity.EXTRA_DNI, getDni());
-        intent.putExtra(activity.EXTRA_LICENCIA,getLicencia());
+        String fraseFechas = doc.select("#lblFechas").first().html();
+        String[] fraseFechasSplitted = fraseFechas.split("\\s");
+        String[] fecha1Splitted = fraseFechasSplitted[4].split("\\d+");
+        String[] fecha2Splitted = fraseFechasSplitted[6].split("\\d+");
 
-        return intent;
-    }*/
+        GregorianCalendar fecha1 = new GregorianCalendar(Integer.parseInt(fecha1Splitted[2])+1900,Integer.parseInt(fecha1Splitted[1]),
+                Integer.parseInt(fecha1Splitted[0]));
+        GregorianCalendar fecha2 = new GregorianCalendar(Integer.parseInt(fecha2Splitted[2])+1900,Integer.parseInt(fecha2Splitted[1]),
+                Integer.parseInt(fecha2Splitted[0]));
+
+        designacion.setFechaInicio(fecha1);
+        designacion.setFechaFin(fecha2);
+
+        designacion.setMiembroCTA(new Miembro(doc.select("#lblNombre").first().html()));
+
+        //TODO: Parsear la informacion de los partidos.
+
+        return designacion;
+    }
 }

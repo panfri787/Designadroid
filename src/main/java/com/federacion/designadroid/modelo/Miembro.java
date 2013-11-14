@@ -11,6 +11,10 @@ public class Miembro {
 
     private Integer licencia;
 
+    public Miembro(String pnombre){
+        this.nombre = pnombre;
+    }
+
     public Miembro(String pnombre, String ptelefono){
         this.nombre = pnombre;
         this.telefono = ptelefono;
