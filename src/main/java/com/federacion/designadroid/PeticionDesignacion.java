@@ -13,24 +13,20 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import 	org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.StringTokenizer;
 
 /**
  * Created by Pablo on 6/08/13.
@@ -116,8 +112,8 @@ public class PeticionDesignacion extends AsyncTask<Void, Void, Void>{
 
         String fraseFechas = doc.select("#lblFechas").first().html();
         String[] fraseFechasSplitted = fraseFechas.split("\\s");
-        String[] fecha1Splitted = fraseFechasSplitted[4].split("\\d+");
-        String[] fecha2Splitted = fraseFechasSplitted[6].split("\\d+");
+        String[] fecha1Splitted = fraseFechasSplitted[4].split("\\D+");
+        String[] fecha2Splitted = fraseFechasSplitted[6].split("\\D+");
 
         GregorianCalendar fecha1 = new GregorianCalendar(Integer.parseInt(fecha1Splitted[2])+1900,Integer.parseInt(fecha1Splitted[1]),
                 Integer.parseInt(fecha1Splitted[0]));
